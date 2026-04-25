@@ -4,273 +4,348 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de PBT - PMRv SC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #3b82f6;
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f8fafc;
-            --muted: #94a3b8;
-            --success: #10b981;
-            --danger: #ef4444;
-            --amber: #f59e0b;
-            --border: #334155;
+            --pm-red: #ED3237;
+            --pm-green: #00A859;
+            --pm-blue: #3E4095;
+            --pm-gold: #FFF212;
+            --pm-white: #FFFFFF;
+            --pm-bg: #F4F4F4;
+            --pm-text: #333333;
+            --pm-border: #CCCCCC;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: var(--pm-bg);
+            background-image: linear-gradient(135deg, #ffffff 25%, transparent 25%), 
+                              linear-gradient(225deg, #ffffff 25%, transparent 25%), 
+                              linear-gradient(45deg, #ffffff 25%, transparent 25%), 
+                              linear-gradient(315deg, #ffffff 25%, var(--pm-bg) 25%);
+            background-position: 10px 0, 10px 0, 0 0, 0 0;
+            background-size: 20px 20px;
+            background-repeat: repeat;
+            color: var(--pm-text);
             margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--pm-white);
+            border-bottom: 5px solid var(--pm-green);
+            position: relative;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        /* Faixas Diagonais Estilo Viatura */
+        .stripes {
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: repeating-linear-gradient(
+                45deg,
+                var(--pm-green),
+                var(--pm-green) 20px,
+                var(--pm-red) 20px,
+                var(--pm-red) 40px
+            );
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-logo {
+            height: 60px;
+            width: auto;
+        }
+
+        .header-title h1 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--pm-blue);
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .header-title p {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: var(--pm-green);
+            font-weight: 700;
+        }
+
+        .emergency-198 {
+            background-color: var(--pm-red);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: 900;
+            font-size: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1;
+        }
+
+        .emergency-198 span {
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .main-container {
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 15px;
+            padding: 20px;
         }
 
         .container {
             width: 100%;
             max-width: 450px;
-            background: var(--card);
-            border-radius: 20px;
+            background: var(--pm-white);
+            border-radius: 8px;
             padding: 25px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid var(--pm-border);
         }
-
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .brand-logo {
-            width: 60px;
-            margin-bottom: 10px;
-        }
-
-        h1 { margin: 0; font-size: 20px; color: var(--primary); font-weight: 900; }
-        p { margin: 5px 0 0; font-size: 12px; color: var(--muted); }
 
         .form-group { margin-bottom: 20px; }
-        label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.5px; }
+        label { 
+            display: block; 
+            font-size: 12px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            color: var(--pm-blue); 
+            margin-bottom: 8px; 
+            border-left: 3px solid var(--pm-green);
+            padding-left: 8px;
+        }
 
         select, input {
             width: 100%;
-            background: rgba(15, 23, 42, 0.5);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 14px;
-            color: #fff;
+            background: var(--pm-white);
+            border: 1px solid var(--pm-border);
+            border-radius: 4px;
+            padding: 12px;
+            color: var(--pm-text);
             font-size: 16px;
             font-weight: 600;
             transition: all 0.2s;
         }
 
         select:focus, input:focus {
-            border-color: var(--primary);
+            border-color: var(--pm-blue);
             outline: none;
-            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 2px rgba(62, 64, 149, 0.1);
         }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
+        .image-preview {
+            text-align: center;
+            margin-bottom: 20px;
+            background: #eee;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--pm-border);
+        }
+
         .result-panel {
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 16px;
+            background: #f9f9f9;
+            border-radius: 8px;
             padding: 20px;
             margin-top: 10px;
-            border: 1px solid var(--border);
+            border: 2px solid var(--pm-blue);
         }
 
         .res-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .res-row:last-child { margin-bottom: 0; }
-        .res-label { font-size: 13px; color: var(--muted); }
-        .res-val { font-size: 16px; font-weight: 800; font-family: monospace; }
+        .res-label { font-size: 13px; font-weight: 700; color: var(--pm-text); }
+        .res-val { font-size: 16px; font-weight: 800; color: var(--pm-blue); }
 
         .status-badge {
             margin-top: 20px;
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 8px;
             text-align: center;
             display: none;
-            animation: fadeIn 0.3s ease;
+            font-weight: 700;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .status-badge.legal { 
+            background: var(--pm-green); 
+            color: white; 
+        }
+        
+        .status-badge.excesso { 
+            background: var(--pm-red); 
+            color: white; 
+            animation: pulse 1s infinite;
+        }
 
-        .status-badge.legal { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); color: var(--success); }
-        .status-badge.excesso { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger); }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
 
         .infracao-box {
             margin-top: 15px;
-            background: rgba(245, 158, 11, 0.05);
-            border: 1px dashed var(--amber);
-            border-radius: 12px;
+            background: #fff8e1;
+            border: 1px solid var(--pm-gold);
+            border-radius: 8px;
             padding: 15px;
             font-size: 12px;
-            line-height: 1.5;
             display: none;
         }
 
         .copy-btn {
             width: 100%;
-            background: var(--primary);
+            background: var(--pm-blue);
             color: white;
             border: none;
             padding: 12px;
-            border-radius: 10px;
+            border-radius: 4px;
             font-weight: 700;
             margin-top: 10px;
             cursor: pointer;
+            text-transform: uppercase;
         }
 
-        .footer-note {
+        .copy-btn:hover {
+            background: #2a2c7a;
+        }
+
+        footer {
+            background: var(--pm-blue);
+            color: white;
             text-align: center;
-            font-size: 10px;
-            color: var(--muted);
-            margin-top: 20px;
+            padding: 15px;
+            font-size: 11px;
+            margin-top: auto;
         }
 
         .hidden { display: none; }
         .mt-8 { margin-top: 8px; }
-
-        /* Estilos para Abas */
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: center;
-        }
-        .tab {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: rgba(15, 23, 42, 0.5);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 12px;
-            width: 100px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .tab.active {
-            border-color: var(--primary);
-            background: rgba(59, 130, 246, 0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-        }
-        .tab img {
-            width: 40px;
-            height: 30px;
-            object-fit: contain;
-            margin-bottom: 8px;
-            filter: grayscale(1);
-            transition: all 0.3s ease;
-        }
-        .tab.active img {
-            filter: grayscale(0);
-        }
-        .tab span {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--muted);
-            letter-spacing: 0.5px;
-        }
-        .tab.active span {
-            color: var(--primary);
-        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <svg width="220" height="80" viewBox="0 0 220 80" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
-            <rect width="220" height="80" rx="16" fill="rgba(15, 23, 42, 0.8)" stroke="var(--primary)" stroke-width="2"/>
-            <path d="M 20 40 L 40 20 L 40 60 Z" fill="var(--primary)" opacity="0.8"/>
-            <path d="M 200 40 L 180 20 L 180 60 Z" fill="var(--primary)" opacity="0.8"/>
-            <text x="110" y="38" font-family="system-ui, sans-serif" font-weight="900" font-size="18" fill="var(--primary)" text-anchor="middle" letter-spacing="2">PESOS E</text>
-            <text x="110" y="62" font-family="system-ui, sans-serif" font-weight="900" font-size="18" fill="#f8fafc" text-anchor="middle" letter-spacing="1">DIMENSÕES</text>
-        </svg>
-        <h1>CALCULADORA DE PBT</h1>
-        <p>Fiscalização por Nota Fiscal (Res. Contran)</p>
-    </header>
-
-    <!-- Abas ocultadas -->
-
-    <div style="text-align: center; margin-bottom: 20px; background: rgba(15, 23, 42, 0.5); padding: 10px; border-radius: 16px; border: 1px solid var(--border);">
-        <img src="caminhao.png" alt="Visualização do Caminhão" style="width: 100%; height: auto; max-width: 100%; border-radius: 8px;">
+<header>
+    <div class="header-content">
+        <div class="logo-area">
+            <img src="Logo.png" alt="Brasão PMRv" class="brand-logo">
+            <div class="header-title">
+                <h1>PMRv - Santa Catarina</h1>
+                <p>Polícia Militar Rodoviária</p>
+            </div>
+        </div>
+        <div class="emergency-198">
+            <span>Emergência</span>
+            198
+        </div>
     </div>
+    <div class="stripes"></div>
+</header>
 
-    <div class="form-group">
-        <label>Configuração do Veículo</label>
-        <select id="config" onchange="calcular()">
-            <optgroup label="Caminhão Simples">
-                <option value="16000">🚚 2 Eixos (Toco) - 16t</option>
-                <option value="23000">🚚 3 Eixos (Truck) - 23t</option>
-                <option value="29000">🚚 4 Eixos (Bitruck) - 29t</option>
-            </optgroup>
-            <optgroup label="Caminhão Trator + Semirreboque">
-                <option value="33000">🚛 3 Eixos (Cavalo Simples + 1) - 33t</option>
-                <option value="41500">🚛 4 Eixos (Cavalo Simples + 2) - 41.5t</option>
-                <option value="48500">🚛 5 Eixos (Cavalo Truck + 2 ou Simples + 3) - 48.5t</option>
-                <option value="53000">🚛 6 Eixos (Cavalo Truck + 3) - 53t</option>
-            </optgroup>
-            <optgroup label="Combinações (CVC)">
-                <option value="57000">🚛 7 Eixos (Bitrem) - 57t</option>
-                <option value="74000">🚛 9 Eixos (Rodotrem) - 74t</option>
-            </optgroup>
-            <option value="MANUAL">✏️ Outro limite (Manual)</option>
-        </select>
-        <input type="number" id="manual_limite" class="hidden mt-8" placeholder="Limite em KG" oninput="calcular()">
-    </div>
+<div class="main-container">
+    <div class="container">
+        <h2 style="text-align: center; color: var(--pm-blue); font-size: 18px; margin-top: 0; border-bottom: 2px solid var(--pm-gold); padding-bottom: 10px;">CALCULADORA DE PBT</h2>
+        
+        <div class="image-preview">
+            <img src="caminhao.png" alt="Veículo" style="width: 100%; height: auto; border-radius: 4px;">
+        </div>
 
-    <div class="grid-2">
         <div class="form-group">
-            <label>Tara (KG)</label>
-            <input type="number" id="tara" placeholder="0" oninput="calcular()">
+            <label>Configuração do Veículo</label>
+            <select id="config" onchange="calcular()">
+                <optgroup label="Caminhão Simples">
+                    <option value="16000">🚚 2 Eixos (Toco) - 16t</option>
+                    <option value="23000">🚚 3 Eixos (Truck) - 23t</option>
+                    <option value="29000">🚚 4 Eixos (Bitruck) - 29t</option>
+                </optgroup>
+                <optgroup label="Caminhão Trator + Semirreboque">
+                    <option value="33000">🚛 3 Eixos (Cavalo Simples + 1) - 33t</option>
+                    <option value="41500">🚛 4 Eixos (Cavalo Simples + 2) - 41.5t</option>
+                    <option value="48500">🚛 5 Eixos (Cavalo Truck + 2 ou Simples + 3) - 48.5t</option>
+                    <option value="53000">🚛 6 Eixos (Cavalo Truck + 3) - 53t</option>
+                </optgroup>
+                <optgroup label="Combinações (CVC)">
+                    <option value="57000">🚛 7 Eixos (Bitrem) - 57t</option>
+                    <option value="74000">🚛 9 Eixos (Rodotrem) - 74t</option>
+                </optgroup>
+                <option value="MANUAL">✏️ Outro limite (Manual)</option>
+            </select>
+            <input type="number" id="manual_limite" class="hidden mt-8" placeholder="Limite em KG" oninput="calcular()">
         </div>
-        <div class="form-group">
-            <label>Peso NF (KG)</label>
-            <input type="number" id="carga" placeholder="0" oninput="calcular()">
-        </div>
-    </div>
 
-    <div class="result-panel">
-        <div class="res-row">
-            <span class="res-label">PBT Apurado:</span>
-            <span class="res-val" id="res_apurado" style="color: #fff;">0 kg</span>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Tara (KG)</label>
+                <input type="number" id="tara" placeholder="0" oninput="calcular()">
+            </div>
+            <div class="form-group">
+                <label>Peso NF (KG)</label>
+                <input type="number" id="carga" placeholder="0" oninput="calcular()">
+            </div>
         </div>
-        <div class="res-row">
-            <span class="res-label">Limite Legal:</span>
-            <span class="res-val" id="res_limite">0 kg</span>
+
+        <div class="result-panel">
+            <div class="res-row">
+                <span class="res-label">PBT Apurado:</span>
+                <span class="res-val" id="res_apurado">0 kg</span>
+            </div>
+            <div class="res-row">
+                <span class="res-label">Limite Legal:</span>
+                <span class="res-val" id="res_limite">0 kg</span>
+            </div>
+            <div class="res-row" style="border-top: 1px solid #ddd; margin-top: 5px; padding-top: 5px;">
+                <span class="res-label" style="color: var(--pm-green);">Limite c/ Tolerância (5%):</span>
+                <span class="res-val" id="res_tolerancia" style="color: var(--pm-green);">0 kg</span>
+            </div>
         </div>
-        <div class="res-row" style="color: var(--primary);">
-            <span class="res-label">Limite c/ Tolerância (5%):</span>
-            <span class="res-val" id="res_tolerancia">0 kg</span>
+
+        <div id="status_badge" class="status-badge">
+            <div id="status_icon" style="font-size: 24px;"></div>
+            <div id="status_titulo" style="font-weight: 900; font-size: 16px;"></div>
+            <div id="status_desc" style="font-size: 11px; margin-top: 4px;"></div>
         </div>
-    </div>
 
-    <div id="status_badge" class="status-badge">
-        <div id="status_icon" style="font-size: 24px;"></div>
-        <div id="status_titulo" style="font-weight: 900; font-size: 16px;"></div>
-        <div id="status_desc" style="font-size: 11px; margin-top: 4px;"></div>
-    </div>
-
-    <div id="infracao_area" class="infracao-box">
-        <strong style="color: var(--amber);">📑 ENQUADRAMENTO SUGERIDO:</strong>
-        <pre id="infracao_text" style="white-space: pre-wrap; margin: 10px 0 0; font-family: inherit; font-size: 11px; color: #fff;"></pre>
-        <button class="copy-btn" onclick="copiar()">📋 Copiar Dados</button>
-    </div>
-
-    <div class="footer-note">
-        Polícia Militar Rodoviária de Santa Catarina<br>
-        Ferramenta de Apoio Operacional
+        <div id="infracao_area" class="infracao-box">
+            <strong style="color: var(--pm-red); text-transform: uppercase; display: block; margin-bottom: 5px;">📑 Enquadramento Sugerido:</strong>
+            <pre id="infracao_text" style="white-space: pre-wrap; margin: 0; font-family: 'Roboto', sans-serif; font-size: 11px; color: #333; background: #fff; padding: 10px; border-radius: 4px; border: 1px solid var(--pm-border);"></pre>
+            <button class="copy-btn" onclick="copiar()">📋 Copiar Dados</button>
+        </div>
     </div>
 </div>
+
+<footer>
+    Polícia Militar Rodoviária de Santa Catarina<br>
+    Desenvolvido pelo Cabo Jeferson<br>
+    <strong>Apoio Operacional ao Policiamento Rodoviário</strong>
+</footer>
 
 <script>
     function calcular() {

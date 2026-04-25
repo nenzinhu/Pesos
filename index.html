@@ -163,6 +163,36 @@
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
+        /* Tabs Estilo Militar */
+        .method-selector {
+            display: flex;
+            background: #eee;
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid var(--pm-border);
+        }
+
+        .method-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: none;
+            font-weight: 700;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .method-btn.active {
+            background: var(--pm-blue);
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
         .image-preview {
             text-align: center;
             margin-bottom: 20px;
@@ -274,6 +304,11 @@
     <div class="container">
         <h2 style="text-align: center; color: var(--pm-blue); font-size: 18px; margin-top: 0; border-bottom: 2px solid var(--pm-gold); padding-bottom: 10px;">CALCULADORA DE PBT</h2>
         
+        <div class="method-selector">
+            <button type="button" class="method-btn active" id="btn_balanca" onclick="setMetodo('balanca')">⚖️ Balança</button>
+            <button type="button" class="method-btn" id="btn_nf" onclick="setMetodo('nf')">📄 Nota Fiscal</button>
+        </div>
+
         <div class="image-preview">
             <img src="caminhao.png" alt="Veículo" style="width: 100%; height: auto; border-radius: 4px;">
         </div>
@@ -348,6 +383,23 @@
 </footer>
 
 <script>
+    let metodoAtual = 'balanca';
+
+    function setMetodo(metodo) {
+        metodoAtual = metodo;
+        document.getElementById('btn_balanca').classList.toggle('active', metodo === 'balanca');
+        document.getElementById('btn_nf').classList.toggle('active', metodo === 'nf');
+        
+        const labelTolerancia = document.querySelector('.res-row[style*="border-top"] .res-label');
+        if (metodo === 'nf') {
+            labelTolerancia.innerText = 'Limite p/ Autuação (0%):';
+        } else {
+            labelTolerancia.innerText = 'Limite c/ Tolerância (5%):';
+        }
+        
+        calcular();
+    }
+
     function calcular() {
         const configSel = document.getElementById('config');
         const manualInp = document.getElementById('manual_limite');
@@ -365,7 +417,11 @@
         let carga = parseFloat(cargaInp.value || 0);
 
         let apurado = tara + carga;
-        let tolerancia = Math.floor(limiteLegal * 0.05);
+        
+        // Tolerância de 5% apenas se for Balança
+        let porcentagemTolerancia = metodoAtual === 'balanca' ? 0.05 : 0;
+        let tolerancia = Math.floor(limiteLegal * porcentagemTolerancia);
+        
         let limiteMax = limiteLegal + tolerancia;
         let excesso = apurado - limiteLegal;
         let excessoTolerancia = apurado - limiteMax;
@@ -389,14 +445,24 @@
             badge.className = 'status-badge legal';
             document.getElementById('status_icon').innerText = "✅";
             document.getElementById('status_titulo').innerText = "DENTRO DO LIMITE";
-            document.getElementById('status_desc').innerText = excesso > 0 ? 
-                `Excesso de ${excesso}kg (dentro dos 5%)` : "Peso em conformidade.";
+            
+            if (excesso > 0 && metodoAtual === 'balanca') {
+                document.getElementById('status_desc').innerText = `Excesso de ${excesso}kg (dentro dos 5%)`;
+            } else {
+                document.getElementById('status_desc').innerText = "Peso em conformidade.";
+            }
+            
             infrArea.style.display = 'none';
         } else {
             badge.className = 'status-badge excesso';
             document.getElementById('status_icon').innerText = "⚖️";
             document.getElementById('status_titulo').innerText = "EXCESSO DETECTADO!";
-            document.getElementById('status_desc').innerHTML = `Excesso Total: <strong>${excesso.toLocaleString('pt-BR')} kg</strong><br>Acima da Tolerância: <strong>${excessoTolerancia.toLocaleString('pt-BR')} kg</strong>`;
+            
+            let descHtml = `Excesso Total: <strong>${excesso.toLocaleString('pt-BR')} kg</strong>`;
+            if (metodoAtual === 'balanca') {
+                descHtml += `<br>Acima da Tolerância: <strong>${excessoTolerancia.toLocaleString('pt-BR')} kg</strong>`;
+            }
+            document.getElementById('status_desc').innerHTML = descHtml;
             
             infrArea.style.display = 'block';
             montarInfracao(limiteLegal, apurado, excesso);
